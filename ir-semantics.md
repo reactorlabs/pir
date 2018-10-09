@@ -229,10 +229,10 @@ On a call we create a new local scope which contains all local function argument
 We still need to define `pick-version` which is the metafunction that chooses which version to invoke given the current configuration and the arguments.
 
     [CALL]
-                   e  ──>  Lᶠ                 eₜ ──>  vₜ              (Lᶠ S := F) ∈ P
-           E' := (x ↦ v)*, (y ↦ nil)*       K := (I L x E)               where S = ((x : _)*)
-        ────────────────────────────────────────────────────────      B :=  pick─version(Lᶠ, C, v*)
-         P I L K* E : call x = e (e*)  ─τ─>  I' start (K K*) E'          where B = var y* in I'
+          e  ──>  Lᶠ        eₜ ──>  vₜ      E' := (x ↦ v)*, (y ↦ nil)*
+          B :=  pick─version(Lᶠ, C, v*)  where B = var y* in I'                (Lᶠ S := F) ∈ P
+        ───────────────────────────────────────────────────────────────           where S = ((x : _)*)
+         P I L K* E : call x = e (e*)  ─τ─>  I' start ((I L x E) K*) E'
 
     [RETURN]
           e  ──>  v       E' := E[x ↦ v]
