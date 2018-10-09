@@ -63,13 +63,15 @@ For example in
       (x₁ : T₁'') : T'' [Tₕ''] { ... }               # signature of second version
       ...
 
-we require that.
+we (probably) require that.
 
     T₁ <: T₁'    and    T' <: T     and      Tₕ <: Tₕ'
 
 TBD: define `<:`
 
 #### Example:
+
+(Note that the type syntax is not yet decided on, so take this example with a grain of salt)
 
     fun(x : ⊤) : ⊤ [⊤ ↦ ⊤] :=
       (x : ⊤) : int [E:⊤ ↦ E] {
