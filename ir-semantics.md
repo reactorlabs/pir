@@ -109,7 +109,7 @@ The labeled reduction `══A══>` is expressed in terms of an auxiliare rel
 Therefore `I(L)` extracts the next instruction to execute.
 
     [══>]
-         P I L K* M E : I(L)  ─╴A╶─>  C'
+         P I L K* M E : I(L)  ──A──>  C'
         ───────────────────────────────
          P I L K* M E         ══A══> C'
 
@@ -135,7 +135,7 @@ The metafunction `succ` selects the successor label of the immediately following
 
 In all of the following instructions `L` is is implicitly updated to `(succ I L)` on the rhs.
 
-     P I L K* M E : i  ╰╴A──>  C'
+     P I L K* M E : i  └─A──>  C'
     ────────────────────────────────────────────
      P I L K* M E : i  ──A──>  C'[(succ I L)/L]
 
@@ -146,7 +146,7 @@ Storing something to a local variable is a silent action.
 Local variables need to be declared (see the syntax of `F`).
 
     [LOCAL_ASSIGN]
-        E : (x := e)  ╰╴τ─>  E[x ↦ v]
+        E : (x := e)  └─τ─>  E[x ↦ v]
             if  e ──> v
             and x ∈ dom(E)
 
@@ -154,21 +154,21 @@ Loads and stores to the global scope.
 Variables are declared on first use.
 
     [GLOBAL_STORE]
-        M : (store(x) := e)  ╰╴store x,v─>  M[x ↦ v]
+        M : (store(x) := e)  └─store x,v─>  M[x ↦ v]
             if e ──> v
 
     [GLOBAL_LOAD]
-        M E : (x₁ := load x₂)  ╰╴load x₂─>  E[x₁ ↦ v]
+        M E : (x₁ := load x₂)  └─load x₂─>  E[x₁ ↦ v]
             if (x₂ ↦ v) ∈ M
 
 IO operations.
 To avoid technical difficulties only literals (e.g. no function references).
 
     [IO_READ]
-        E : (x := read)  ╰╴read lit─>  E[x ↦ lit]
+        E : (x := read)  └─read lit─>  E[x ↦ lit]
 
     [IO_WRITE]
-        (print e)  ╰╴print lit─> ()
+        (print e)  └─print lit─> ()
             if e ──> v
 
 ##### Controlflow instruction:
