@@ -187,6 +187,8 @@ Variables are declared on first use.
     [GLOBAL_LOAD]
         M E : x₁ := load x₂  └─load x₂─>  E[x₁ ↦ v]
             if (x₂ ↦ v) ∈ M
+        M E : x₁ := load x₂  └─load x₂─>  E[x₁ ↦ nil]     # maybe?
+            if x₂ ∉ dom(M)
 
 IO operations.
 To avoid technical difficulties only literals (e.g. no function references).
@@ -230,7 +232,7 @@ We still need to define `pick-version` which is the metafunction that chooses wh
                    e  ──>  Lᶠ                 eₜ ──>  vₜ              (Lᶠ S := F) ∈ P
            E' := (x ↦ v)*, (y ↦ nil)*       K := (I L x E)               where S = ((x : _)*)
         ────────────────────────────────────────────────────────      B :=  pick─version(Lᶠ, C, v*)
-         P I L K* E : call x = e (e*)  ─τ─>  I' start (K K*) E'        where B = var y* in I'
+         P I L K* E : call x = e (e*)  ─τ─>  I' start (K K*) E'          where B = var y* in I'
 
     [RETURN]
           e  ──>  v       E' := E[x ↦ v]
