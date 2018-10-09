@@ -139,20 +139,20 @@ We only write the referenced parts of `C` on the lhs.
 
 We only write the referenced parts of `C` on the lhs and the modified parts of `C` on the rhs.
 
-##### Memory and IO instructions.
+##### Autostepping
 
 The metafunction `succ` selects the successor label of the immediately following instruction in the instruction stream
 
     succ (..., L ↦ _, L' ↦ _, ...) L  =  L'
 
-In all of the following instructions `L` is is implicitly updated to `(succ I L)` on the rhs (which is a convoluted way of saying they step to the next instruction).
+First we define an infrastructure rule, that allows us to use the realtion symbol `└─A──>` for instructions which step to the next instruction in the instruction stream..
 
-     P I L K* M E : i  └─A──>  C'
-    ────────────────────────────────────────────
-     P I L K* M E : i  ──A──>  C'[(succ I L)/L]
+    [AUTOSTEP]
+         P I L K* M E : i  └─A──>  C'
+        ────────────────────────────────────────────
+         P I L K* M E : i  ──A──>  C'[(succ I L)/L]
 
-Note that there is nothing to prevent a variable name `x` from being used as a local and a global variable at the same time.
-If the source language allows shadowing, the compiler frontend is responsible for emitting the right instructions.
+##### Memory and IO instructions.
 
 Storing something to a local variable is a silent action.
 Local variables need to be declared (see the syntax of `F`).
@@ -164,6 +164,8 @@ Local variables need to be declared (see the syntax of `F`).
 
 Loads and stores to the global scope.
 Variables are declared on first use.
+Note that there is nothing to prevent a variable name `x` from being used as a local and a global variable at the same time.
+If the source language allows shadowing, the compiler frontend is responsible for emitting the right instructions.
 
     [GLOBAL_STORE]
         M : store(x) := e  └─store x,v─>  M[x ↦ v]
