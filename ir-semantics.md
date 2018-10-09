@@ -24,22 +24,21 @@ TBD: I am not sure about this part yet
 
 Programs consist of a list of functions. Functions have the following shape:
 
-    functionName(formalArg : type, ...) : resultType [heapType] :=
+    functionName(formalArg*) :=
       # version 1
-      (formalArg : refinedType, ...) : refinedResultType [refinedHeapType] { var x,y,z in  instructions, ... }
+      (refinedType*) : refinedResultType [refinedHeapType] { var x,y,z in  instructions, ... }
       # version 2
-      (formalArg : refinedType, ...) : refinedResultType [refinedHeapType] { var x,y,z in  instructions, ... }
+      (refinedType*) : refinedResultType [refinedHeapType] { var x in  instructions, ... }
       ...
 
 Or more formally:
 
-    S  ::= (a*) : t [tₕ]              Function Signature:  formal arguments and heap type
-    D  ::= Lᶠ S                       Declaration:         function name and signature
+    P ::= (Lᶠ(x*) := F)*             program:             list of function declarations
 
-    P ::= (D := F)*                   program:             list of function declarations with signature
-    F ::= (S {B})*                    function:            partially typed versions
-    B ::= var x* in I                 version body:        variable declarations and code
-    I ::= (L ↦ i)*                    instruction stream:  labeled instructions
+    F ::= (S {B})*                   function:            a list of differently typed versions
+    S ::= (t*) : t [tₕ]              version signature:   argument types, result type and heap type
+    B ::= var x* in I                version body:        variable declarations and code
+    I ::= (L ↦ i)*                   instruction stream:  labeled instructions
 
 ##### Reserved Names
 
@@ -80,34 +79,20 @@ expressions have no effects (that why `x₁ := load(x₂)` is a separate instruc
     | lit                   literals
     | Lᶠ                    function reference
 
-##### Signatures (TB)
-
-The different signatures of the partially typed versions need to be compatible with the function signature.
-For example in
-
-    fun(x₁ : T₁)  : T   [Tₕ] :=           # function name and signature
-      (x₁ : T₁')  : T'  [Tₕ']  { ... }    # signature of first version
-
-we (probably) require that.
-
-    T₁ <: T₁'    and    T' <: T     and      Tₕ <: Tₕ'
-
-TBD: define `<:`
-
 #### Example:
 
 (Note that the type syntax is not yet decided on, so take this example with a grain of salt)
 
-    fun(x : ⊤) : ⊤ [⊤ ↦ ⊤] :=
-      (x : ⊤) : int [E:⊤ ↦ E] {
+    fun(x) :=
+      (⊤) : int [E:⊤ ↦ E] {
         var res;
         call res := toInt(x)
         return (2*res)
       },
-      (x : int) : int [E:⊤ ↦ E] {
+      (int) : int [E:⊤ ↦ E] {
         return (2*x1)
       }
-    main() : ⊤ [⊤ ↦ ⊤] :=
+    main() :=
       () : ⊤ [⊤ ↦ ⊤] {
         var res;
         call res := fun(3)
@@ -230,8 +215,8 @@ We still need to define `pick-version` which is the metafunction that chooses wh
 
     [CALL]
           e  ──>  Lᶠ        eₜ ──>  vₜ      E' := (x ↦ v)*, (y ↦ nil)*
-          B :=  pick─version(Lᶠ, C, v*)  where B = var y* in I'                (Lᶠ S := F) ∈ P
-        ───────────────────────────────────────────────────────────────           where S = ((x : _)*)
+           S,B :=  pick─version(Lᶠ, C, v*)  where B = var y* in I'
+        ───────────────────────────────────────────────────────────────        Lᶠ(x*)  ∈ dom(P)
          P I L K* E : call x = e (e*)  ─τ─>  I' start ((I L x E) K*) E'
 
     [RETURN]
