@@ -3,37 +3,36 @@
     x        variables
     L        labels
     Lᶠ       function name labels
-    S        signature
 
-    T  ::= ⊤ | ⊥ | int | bool             types
-    Tₕ ::= (x : T)* ↦ (y : T)*            Partial Heap Type:   TBD!!
-    A  ::= x : T                          Formal argument:     name and type
-    S  ::= (A*) : T [Tₕ]                  Signature:           formal arguments and heap type
-    D  ::= Lᶠ S                           Declaration:         function name and signature
+    t  ::= ⊤ | ⊥ | int | bool | ...   types
+    tₕ ::= (x : t)* ↦ (y : t)*        Partial Heap Type:   TBD!!
+    a  ::= x : t                      Formal argument:     name and type
 
-    P ::= (D := F)*                       program:             list of function declarations with signature
-    F ::= (S {B})*                        function:            partially typed versions
-    B ::= var x* in I                     version body:        variable declarations and code
-    I ::= (l ↦ i)*                        instruction stream:  labeled instructions
+    S  ::= (a*) : t [tₕ]              Function Signature:  formal arguments and heap type
+    D  ::= Lᶠ S                       Declaration:         function name and signature
+
+    P ::= (D := F)*                   program:             list of function declarations with signature
+    F ::= (S {B})*                    function:            partially typed versions
+    B ::= var x* in I                 version body:        variable declarations and code
+    I ::= (L ↦ i)*                    instruction stream:  labeled instructions
 
 ##### Reserved Names
 
     main      main function    (execution of program starts here)
     start     start label      (execution of function starts here)
 
-
 ##### Instructions
 
-    i ::=    instructions
-    | x        := e                  local variable assignment
-    | store(x) := e                  global variable assignment
-    | x₁       := load(x₂)           gloabl variable load
-    | x        := read               read variable
-    | print e                        print expression
-    | goto     L                     goto
-    | branch e L₁ L₂                 conditional
-    | call   x := e (arg*)           function call
-    | return e                       return
+    i ::=                instructions
+    |       x  := e           local variable assignment
+    | store(x) := e           store to a global variable
+    |       x₁ := load(x₂)    load from a gloabl variable
+    | print e
+    | x := read               read a literal from the user
+    | goto     L
+    | branch e L₁ L₂
+    | call   x := e (arg*)
+    | return e
     | stop
 
     e ::=     expression
@@ -43,7 +42,7 @@
     se ::=    simple expressions
     | lit                   literals
     | x                     variables
-    | Lᶠ                    function reference
+    | `Lᶠ`                  function reference
 
     lit ::=  literals
     | nil
@@ -95,9 +94,9 @@ TBD: define `<:`
 
 #### Configuration
 
-    C ::= (P I L K* M E)             configuration
-    K ::= (I L x E)                  kontinuation
-    A ::=       actions
+    C ::= (P I L K* M E)    configuration
+    K ::= (I L x E)         kontinuation
+    A ::=                   actions
     | τ
     | store x,v | load x
     | read lit | print lit
@@ -121,7 +120,7 @@ We only write the referenced parts of `C` on the lhs.
     [EXPR]
         E : x             ──>    v               if   (x ↦ v) ∈ E
           : lit           ──>    lit
-        P : Lᶠ            ──>    Lᶠ              if   Lᶠ ∈ dom(P)
+        P : `Lᶠ`          ──>    Lᶠ              if   Lᶠ ∈ dom(P)
         C : primop(se*)   ──>    ⟦primop⟧(v*)    if   C: seᵢ  ──>  vᵢ  ∀i
 
 #### Evaluation of instructions `(C : i) ──A──> C`
