@@ -173,7 +173,7 @@ Storing something to a local variable is a silent action.
 Local variables need to be declared (see the syntax of `F`).
 
     [LOCAL_ASSIGN]
-        E : (x := e)  └─τ─>  E[x ↦ v]
+        E : x := e  └─τ─>  E[x ↦ v]
             if  e ──> v
             and x ∈ dom(E)
 
@@ -181,21 +181,21 @@ Loads and stores to the global scope.
 Variables are declared on first use.
 
     [GLOBAL_STORE]
-        M : (store(x) := e)  └─store x,v─>  M[x ↦ v]
+        M : store(x) := e  └─store x,v─>  M[x ↦ v]
             if e ──> v
 
     [GLOBAL_LOAD]
-        M E : (x₁ := load x₂)  └─load x₂─>  E[x₁ ↦ v]
+        M E : x₁ := load x₂  └─load x₂─>  E[x₁ ↦ v]
             if (x₂ ↦ v) ∈ M
 
 IO operations.
 To avoid technical difficulties only literals (e.g. no function references).
 
     [IO_READ]
-        E : (x := read)  └─read lit─>  E[x ↦ lit]
+        E : x := read  └─read lit─>  E[x ↦ lit]
 
     [IO_WRITE]
-        (print e)  └─print lit─> ()
+        print e  └─print lit─> ()
             if e ──> v
 
 ##### Controlflow instruction:
@@ -227,13 +227,13 @@ On a call we create a new local scope which contains all local function argument
 We still need to define `pick-version` which is the metafunction that chooses which version to invoke given the current configuration and the arguments.
 
     [CALL]
-                   e  ──>  Lᶠ                 eₜ ──>  vₜ                (Lᶠ S := F) ∈ P
-           E' := {(x ↦ v)*, (y ↦ nil)*}     K := (I L x E)                 where S = ((x : _)*)
-        ──────────────────────────────────────────────────────────      B :=  pick─version(Lᶠ, C, v*)
-         P I L K* E : call x = e (e*)  ─τ─>  I' start (K K*) E'          where B = var y* in I'
+                   e  ──>  Lᶠ                 eₜ ──>  vₜ              (Lᶠ S := F) ∈ P
+           E' := (x ↦ v)*, (y ↦ nil)*       K := (I L x E)               where S = ((x : _)*)
+        ────────────────────────────────────────────────────────      B :=  pick─version(Lᶠ, C, v*)
+         P I L K* E : call x = e (e*)  ─τ─>  I' start (K K*) E'        where B = var y* in I'
 
     [RETURN]
           e  ──>  v       E' := E[x ↦ v]
-        ─────────────────────────────────────      K = (I L x E)
-        (K K*) : return e  ─τ─>  I L K* E'
+        ───────────────────────────────────      K = (I L x E)
+         (K K*) : return e  ─τ─>  I L K* E'
 
