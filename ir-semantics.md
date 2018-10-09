@@ -58,10 +58,10 @@
 The different signatures of the partially typed versions need to be compatible with the function signature.
 For example in
 
-    fun(x₁ : T₁) : T [Tₕ] :=
-      (x₁ : T₁') : T' [Tₕ'] {
-        ...
-      }
+    fun(x₁ : T₁)  : T   [Tₕ] :=                      # function name and signature
+      (x₁ : T₁')  : T'  [Tₕ']  { ... }               # signature of first version
+      (x₁ : T₁'') : T'' [Tₕ''] { ... }               # signature of second version
+      ...
 
 we require that.
 
