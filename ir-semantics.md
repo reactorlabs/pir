@@ -1,12 +1,35 @@
 ## The formal language
 
+### Compared to sourir
+
+* no arrays
+* no heap, just a global scope with dynamic bindings
+* loads and stores to/from the global scope are explicit instructions
+* no inferred local scopes, local variables must be declared at the beginning of a function
+* no assume instruction
+
+### Syntax
+
+metavariables
+
     x        variables
     L        labels
     Lᶠ       function name labels
 
+TBD: I am not sure about this part yet
+
     t  ::= ⊤ | ⊥ | int | bool | ...   types
     tₕ ::= (x : t)* ↦ (y : t)*        Partial Heap Type:   TBD!!
     a  ::= x : t                      Formal argument:     name and type
+
+Programs consist of a list of functions. Functions have the following shape:
+
+    functionName(formalArg : type, ...) heapType :=
+      (formalArg : refinedType, ...) refinedHeapType { var x,y,z in  instructions, ... }  # version 1
+      (formalArg : refinedType, ...) refinedHeapType { var x,y,z in  instructions, ... }  # version 2
+      ...
+
+Or more formally:
 
     S  ::= (a*) : t [tₕ]              Function Signature:  formal arguments and heap type
     D  ::= Lᶠ S                       Declaration:         function name and signature
@@ -18,8 +41,8 @@
 
 ##### Reserved Names
 
-    main      main function    (execution of program starts here)
-    start     start label      (execution of function starts here)
+    main      main function:    execution of program starts here
+    start     start label:      execution of function starts here
 
 ##### Instructions
 
@@ -34,6 +57,8 @@
     | call   x := e (arg*)
     | return e
     | stop
+
+expressions have no effects (that why `x₁ := load(x₂)` is a separate instruction).
 
     e ::=     expression
     | se                    simple expression
@@ -53,15 +78,13 @@
     | lit                   literals
     | Lᶠ                    function reference
 
-##### Signatures
+##### Signatures (TB)
 
 The different signatures of the partially typed versions need to be compatible with the function signature.
 For example in
 
-    fun(x₁ : T₁)  : T   [Tₕ] :=                      # function name and signature
-      (x₁ : T₁')  : T'  [Tₕ']  { ... }               # signature of first version
-      (x₁ : T₁'') : T'' [Tₕ''] { ... }               # signature of second version
-      ...
+    fun(x₁ : T₁)  : T   [Tₕ] :=           # function name and signature
+      (x₁ : T₁')  : T'  [Tₕ']  { ... }    # signature of first version
 
 we (probably) require that.
 
@@ -211,3 +234,4 @@ We still need to define `pick-version` which is the metafunction that chooses wh
           e  ──>  v       E' := E[x ↦ v]
         ─────────────────────────────────────      K = (I L x E)
         (K K*) : return e  ─τ─>  I L K* E'
+
