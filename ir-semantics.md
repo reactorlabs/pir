@@ -168,23 +168,23 @@ Note that there is nothing to prevent a variable name `x` from being used as a l
 If the source language allows shadowing, the compiler frontend is responsible for emitting the right instructions.
 
     [GLOBAL_STORE]
-        M : store(x) := e  └─store x,v─>  M[x ↦ v]
+        M : store(x) := e  └─store x,v──>  M[x ↦ v]
             if e ──> v
 
     [GLOBAL_LOAD]
-        M E : x₁ := load x₂  └─load x₂─>  E[x₁ ↦ v]
+        M E : x₁ := load x₂  └─load x₂──>  E[x₁ ↦ v]
             if (x₂ ↦ v) ∈ M
-        M E : x₁ := load x₂  └─load x₂─>  E[x₁ ↦ nil]     # maybe?
+        M E : x₁ := load x₂  └─load x₂──>  E[x₁ ↦ nil]     # maybe?
             if x₂ ∉ dom(M)
 
 IO operations.
 To avoid technical difficulties only literals (e.g. no function references).
 
     [IO_READ]
-        E : x := read  └─read lit─>  E[x ↦ lit]
+        E : x := read  └─read lit──>  E[x ↦ lit]
 
     [IO_WRITE]
-        print e  └─print lit─> ()
+        print e  └─print lit──> ()
             if e ──> v
 
 ##### Controlflow instruction:
