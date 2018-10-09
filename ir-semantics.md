@@ -123,7 +123,7 @@ We only write the referenced parts of `C` on the lhs.
         P : `Lᶠ`         ──>  Lᶠ            if Lᶠ ∈ dom(P)
         C : primop(se*)  ──>  ⟦primop⟧(v*)  if C: seᵢ  ──>  vᵢ  ∀i
 
-#### Evaluation of instructions `(C : i) ──╴A╶─> C`
+#### Evaluation of instructions `(C : i) ──A──> C`
 
 We only write the referenced parts of `C` on the lhs and the modified parts of `C` on the rhs.
 
@@ -135,9 +135,9 @@ The metafunction `succ` selects the successor label of the immediately following
 
 In all of the following instructions `L` is is implicitly updated to `(succ I L)` on the rhs.
 
-     P I L K* M E : i  └╴A╶─>  C'
+     P I L K* M E : i  ╰╴A──>  C'
     ────────────────────────────────────────────
-     P I L K* M E : i  ─╴A╶─>  C'[(succ I L)/L]
+     P I L K* M E : i  ──A──>  C'[(succ I L)/L]
 
 Note that there is nothing to prevent a variable name `x` from being used as a local and a global variable at the same time.
 If the source language allows shadowing, the compiler frontend is responsible for emitting the right instructions.
@@ -146,7 +146,7 @@ Storing something to a local variable is a silent action.
 Local variables need to be declared (see the syntax of `F`).
 
     [LOCAL_ASSIGN]
-        E : (x := e)  └╴τ╶─>  E[x ↦ v]
+        E : (x := e)  ╰╴τ─>  E[x ↦ v]
             if  e ──> v
             and x ∈ dom(E)
 
@@ -154,21 +154,21 @@ Loads and stores to the global scope.
 Variables are declared on first use.
 
     [GLOBAL_STORE]
-        M : (store(x) := e)  └╴store x,v╶─>  M[x ↦ v]
+        M : (store(x) := e)  ╰╴store x,v─>  M[x ↦ v]
             if e ──> v
 
     [GLOBAL_LOAD]
-        M E : (x₁ := load x₂)  └╴load x₂╶─>  E[x₁ ↦ v]
+        M E : (x₁ := load x₂)  ╰╴load x₂─>  E[x₁ ↦ v]
             if (x₂ ↦ v) ∈ M
 
 IO operations.
 To avoid technical difficulties only literals (e.g. no function references).
 
     [IO_READ]
-        E : (x := read)  └╴read lit╶─>  E[x ↦ lit]
+        E : (x := read)  ╰╴read lit─>  E[x ↦ lit]
 
     [IO_WRITE]
-        (print e)  └╴print lit╶─> ()
+        (print e)  ╰╴print lit─> ()
             if e ──> v
 
 ##### Controlflow instruction:
@@ -177,13 +177,13 @@ Controlflow is goto based.
 To jump or branch we modify the `L` part of the configuration.
 
     [GOTO]
-        goto L          ─╴τ╶─>  L
+        goto L          ─τ─>  L
 
     [BRANCH]
-        branch e L₁ L₂  ─╴τ╶─>  L₁
+        branch e L₁ L₂  ─τ─>  L₁
             if  e  ──>  true
 
-        branch e L₁ L₂  ─╴τ╶─>  L₂
+        branch e L₁ L₂  ─τ─>  L₂
             if  e  ──>  v
             and v  !=  true
 
@@ -191,7 +191,7 @@ Termination is observable.
 As a technical device the configuration transitions to all empty sets, to ensure the reduction terminates.
 
     [STOP]
-        stop         ─╴stop╶─>  ∅*
+        stop         ─stop─>  ∅*
 
 ##### Call instruction:
 
@@ -203,9 +203,9 @@ We still need to define `pick-version` which is the metafunction that chooses wh
                    e  ──>  Lᶠ                 eₜ ──>  vₜ                (Lᶠ S := F) ∈ P
            E' := {(x ↦ v)*, (y ↦ nil)*}     K := (I L x E)                 where S = ((x : _)*)
         ──────────────────────────────────────────────────────────      B :=  pick─version(Lᶠ, C, v*)
-         P I L K* E : call x = e (e*)  ─╴τ╶─>  I' start (K K*) E'          where B = var y* in I'
+         P I L K* E : call x = e (e*)  ─τ─>  I' start (K K*) E'          where B = var y* in I'
 
     [RETURN]
           e  ──>  v       E' := E[x ↦ v]
         ─────────────────────────────────────      K = (I L x E)
-        (K K*) : return e  ─╴τ╶─>  I L K* E'
+        (K K*) : return e  ─τ─>  I L K* E'
