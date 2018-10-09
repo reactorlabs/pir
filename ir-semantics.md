@@ -118,14 +118,14 @@ Therefore `I(L)` extracts the next instruction to execute.
 We only write the referenced parts of `C` on the lhs.
 
     [EXPR]
-        E : x             ──>    v               if   (x ↦ v) ∈ E
-          : lit           ──>    lit
-        P : `Lᶠ`          ──>    Lᶠ              if   Lᶠ ∈ dom(P)
-        C : primop(se*)   ──>    ⟦primop⟧(v*)    if   C: seᵢ  ──>  vᵢ  ∀i
+        E : x            ──>  v             if (x ↦ v) ∈ E
+          : lit          ──>  lit
+        P : `Lᶠ`         ──>  Lᶠ            if Lᶠ ∈ dom(P)
+        C : primop(se*)  ──>  ⟦primop⟧(v*)  if C: seᵢ  ──>  vᵢ  ∀i
 
 #### Evaluation of instructions `(C : i) ──A──> C`
 
-We only write the referenced parts of `C` on the lhs and the modified parts of C on the lhs.
+We only write the referenced parts of `C` on the lhs and the modified parts of `C` on the rhs.
 
 ##### Memory and IO instructions.
 
