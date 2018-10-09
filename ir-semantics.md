@@ -25,8 +25,10 @@ TBD: I am not sure about this part yet
 Programs consist of a list of functions. Functions have the following shape:
 
     functionName(formalArg : type, ...) : resultType [heapType] :=
-      (formalArg : refinedType, ...) : refinedResultType [refinedHeapType] { var x,y,z in  instructions, ... }  # version 1
-      (formalArg : refinedType, ...) : refinedResultType [refinedHeapType] { var x,y,z in  instructions, ... }  # version 2
+      # version 1
+      (formalArg : refinedType, ...) : refinedResultType [refinedHeapType] { var x,y,z in  instructions, ... }
+      # version 2
+      (formalArg : refinedType, ...) : refinedResultType [refinedHeapType] { var x,y,z in  instructions, ... }
       ...
 
 Or more formally:
