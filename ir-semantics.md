@@ -160,7 +160,7 @@ The metafunction `succ` selects the successor label of the immediately following
 
     succ (..., L ↦ _, L' ↦ _, ...) L  =  L'
 
-In all of the following instructions `L` is is implicitly updated to `(succ I L)` on the rhs.
+In all of the following instructions `L` is is implicitly updated to `(succ I L)` on the rhs (which is a convoluted way of saying they step to the next instruction).
 
      P I L K* M E : i  └─A──>  C'
     ────────────────────────────────────────────
